@@ -14,9 +14,5 @@ int main(int argc, char *argv[]) {
     inet_ntoa(addr2.sin_addr);
     printf("Dotted-Decimal notation2: %s\n",str_ptr);
     printf("Dotted-Decimal notation3: %s\n",str_arr);
-
-
-
-
     return 0;
 }
