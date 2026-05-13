@@ -39,7 +39,7 @@ int main(int argc, char* argv[]) {
 	scanf("%d", &opnd_cnt);
 	opmsg[0] = (char)opnd_cnt;
 	for (int i = 0; i < opnd_cnt; i++) {
-		printf("Operand %d", i + 1);
+		printf("Operand %d: ", i + 1);
 		scanf("%d", (int*)&opmsg[i * OPSZ + 1]);
 	}
 	fgetc(stdin);
@@ -51,11 +51,5 @@ int main(int argc, char* argv[]) {
 
 	printf("Operation result: %d \n", result);
 	close(sock);
-	return 0;
-
-
-
-
-
 	return 0;
 }
