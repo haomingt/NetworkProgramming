@@ -43,9 +43,9 @@ int main(int argc, char* argv[]) {
 
 		 recv_len = 0;
 		 while (recv_len < opnd_cnt * OPSZ) {
-			 recv_cnt = read(clnt_sock, &opinfo[recv_len], 4);
+			 recv_cnt = read(clnt_sock, &opinfo[recv_len], OPSZ);
 			 recv_len += recv_cnt;
-		 }
+         }
 		 char op;
 		 read(clnt_sock, &op, 1);
 		 result = calculate(opnd_cnt, (int*)opinfo, op);
