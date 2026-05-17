@@ -29,7 +29,7 @@ int main(int argc, char* argv[]) {
 	if (connect(sock, (struct sockaddr*)&serv_adr, sizeof(serv_adr)) == -1)
 		error_handling("connect() error");
 	int str_len = write(sock, message, strlen(message));
-	read(sock, message, str_len);
+	while(read(sock, message, 1)!=0);
 	message[str_len] = 0;
 	printf("%s\n", message);
 	char mes[] = "thank you";
