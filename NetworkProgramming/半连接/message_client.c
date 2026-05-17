@@ -17,22 +17,23 @@ int main(int argc, char* argv[]) {
 		exit(1);
 	}
 	char message[] = "I'm Nethan,nice to meet you!";
-	int sock = socket(PF_INET, SOCK_DGRAM, 0);
+	int sock = socket(PF_INET, SOCK_STREAM, 0);
 	if (sock == -1) {
 		error_handling("sock() error");
 	}
-	struct sockaddr_in serv_adr,clnt_adr;
+	struct sockaddr_in serv_adr, clnt_adr;
 	memset(&serv_adr, 0, sizeof(serv_adr));
 	serv_adr.sin_family = AF_INET;
 	serv_adr.sin_addr.s_addr = inet_addr(argv[1]);
 	serv_adr.sin_port = htons(atoi(argv[2]));
-	int str_len = sendto(sock, message, strlen(message), 0, (struct sockaddr*)&serv_adr, sizeof(serv_adr));
-	socklen_t clnt_adr_sz = sizeof(clnt_adr);
-	recvfrom(sock, message, str_len, 0, (struct sockaddr*)&clnt_adr, &clnt_adr_sz);
+	if (connect(sock, (struct sockaddr*)&serv_adr, sizeof(serv_adr)) == -1)
+		error_handling("connect() error");
+	int str_len = write(sock, message, strlen(message));
+	read(sock, message, str_len);
 	message[str_len] = 0;
 	printf("%s\n", message);
 	char mes[] = "thank you";
-	str_len = sendto(sock, mes, strlen(mes), 0, (struct sockaddr*)&serv_adr, sizeof(serv_adr));
+	str_len = write(sock, mes, strlen(mes));
 	close(sock);
 	return 0;
 }

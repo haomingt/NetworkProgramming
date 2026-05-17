@@ -17,11 +17,11 @@ int main(int argc, char* argv[]) {
 		exit(1);
 	}
 	char message[BUF_SIZE];
-	int serv_sock = socket(PF_INET, SOCK_DGRAM, 0);
+	int serv_sock = socket(PF_INET, SOCK_STREAM, 0);
 	if (serv_sock == -1) {
 		error_handling("sock() error");
 	}
-	struct sockaddr_in serv_adr,clnt_adr;
+	struct sockaddr_in serv_adr, clnt_adr;
 	memset(&serv_adr, 0, sizeof(serv_adr));
 	serv_adr.sin_family = AF_INET;
 	serv_adr.sin_addr.s_addr = htonl(INADDR_ANY);
@@ -29,13 +29,17 @@ int main(int argc, char* argv[]) {
 	if (bind(serv_sock, (struct sockaddr*)&serv_adr, sizeof(serv_adr)) == -1) {
 		error_handling("bind() error");
 	}
+	if (listen(serv_sock, 5) == -1)
+		error_handling("listen() error");
 	socklen_t clnt_adr_sz = sizeof(clnt_adr);
-	int str_len = recvfrom(serv_sock, message, BUF_SIZE, 0, (struct sockaddr*)&clnt_adr, &clnt_adr_sz);
-	sendto(serv_sock, message, str_len, 0, (struct sockaddr*)&clnt_adr, clnt_adr_sz);
-	shutdown(serv_sock, SHUT_WR);
-	str_len = recvfrom(serv_sock, message, BUF_SIZE, 0, (struct sockaddr*)&clnt_adr, &clnt_adr_sz);
+	int ac_sock = accept(serv_sock, (struct sockaddr*)&clnt_adr, &clnt_adr_sz);
+	int str_len = read(ac_sock, message, BUF_SIZE);
+	write(ac_sock, message, str_len);
+	shutdown(ac_sock, SHUT_WR);
+	str_len = read(ac_sock, message, BUF_SIZE);
 	message[str_len] = 0;
 	printf("%s\n", message);
 	close(serv_sock);
+	close(ac_sock);
 	return 0;
 }
